@@ -1,21 +1,16 @@
 package com.adeo.connector.opus.gateways;
 
-import com.adobe.connector.gateways.ConnectorRequest;
+import com.adobe.connector.gateways.http.RestRequest;
 
-public class OpusRequest implements ConnectorRequest {
-
-    private String[] parameters;
+public abstract class OpusRequest extends RestRequest {
+    protected String[] arguments;
 
     @Override
-    public String getName() {
-        return "com.adeo.connector.opus.gateways.OpusRequest";
+    protected String[] getParameters() {
+        return this.arguments;
     }
 
-    public String[] getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(String... parameters) {
-        this.parameters = parameters;
+    public OpusRequest(String... arguments) {
+        this.arguments = arguments;
     }
 }

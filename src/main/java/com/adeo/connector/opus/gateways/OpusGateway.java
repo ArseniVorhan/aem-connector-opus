@@ -5,6 +5,7 @@ import com.adobe.connector.gateways.ConnectorRequest;
 import com.adobe.connector.gateways.http.Processor;
 import com.adobe.connector.gateways.http.RestGateway;
 import com.adobe.connector.gateways.http.Worker;
+import com.adobe.connector.utils.ConnectorUtils;
 import okhttp3.Credentials;
 import okhttp3.Headers;
 import org.apache.felix.scr.annotations.*;
@@ -12,7 +13,6 @@ import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -62,7 +62,7 @@ public class OpusGateway extends RestGateway {
     @Property(label = "Password", description = "Password for authentication to OPUS")
     protected static final String OPUS_PASSWORD = "opus.auth.password";
 
-    @Property(label = "Request Mappings", description = "Map request type to OPUS url path. Each entry is of the form 'request\":\"urlPath:'", unbounded = PropertyUnbounded.ARRAY)
+    @Property(label = "Request Mappings", description = "Map request type to OPUS url path. Each entry is of the form 'request\":\"path\":\"processor'", unbounded = PropertyUnbounded.ARRAY)
     protected static final String MAPPINGS = "request.mappings";
 
     private String opusScheme;
@@ -95,12 +95,6 @@ public class OpusGateway extends RestGateway {
     }
 
     @Override
-    protected String resolveUrl(Worker worker, ConnectorRequest req) {
-        MessageFormat messageFormat = new MessageFormat(worker.getUrl());
-        return messageFormat.format(((OpusRequest) req).getParameters());
-    }
-
-    @Override
     protected Headers buildHttpHeaders() {
         String credential = Credentials.basic(this.opusUsername, this.opusPassword);
         return new Headers.Builder().add("Authorization", credential).build();
@@ -108,7 +102,7 @@ public class OpusGateway extends RestGateway {
 
     @Override
     protected Optional<Worker> getWorker(ConnectorRequest req) {
-        return Stream.of(mappings).map(elem -> elem.split(":")).filter(s -> s.length == 3 && s[0].equalsIgnoreCase(req.getName())).map(s -> new Worker(buildUrl(s[1]), processors.get(s[2]))).findFirst();
+        return Stream.of(mappings).map(elem -> elem.split(":")).filter(s -> s.length == 3 && ConnectorUtils.getClassHierarchy(req).contains(s[0])).map(s -> new Worker(buildUrl(s[1]), processors.get(s[2]))).findFirst();
     }
 
 }
