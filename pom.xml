@@ -4,11 +4,64 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.adeo.connector.adobe</groupId>
-    <artifactId>aem-connector-api</artifactId>
+    <artifactId>aem-connector-opus</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>OPUS Connector Implementation</name>
     <description>API for connecting AEM to third party repositories</description>
+
+    <profiles>
+        <profile>
+            <id>adobe-public</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <distributionManagement>
+                <repository>
+                    <id>adeo-nexus-releases</id>
+                    <name>Adeo Release Repository</name>
+                    <url>http://nexus.opus.webadeo.net/repository/maven-release</url>
+                </repository>
+                <snapshotRepository>
+                    <id>adeo-nexus-snapshots</id>
+                    <name>Adeo Snapshot Repository</name>
+                    <url>http://nexus.opus.webadeo.net/repository/maven-snapshot</url>
+                </snapshotRepository>
+            </distributionManagement>
+            <repositories>
+                <repository>
+                    <id>adobe-public-releases</id>
+                    <name>Adobe Public Repository</name>
+                    <url>https://repo.adobe.com/nexus/content/groups/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>adobe-public-releases</id>
+                    <name>Adobe Public Repository</name>
+                    <url>https://repo.adobe.com/nexus/content/groups/public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>never</updatePolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -42,6 +95,11 @@
                         </Export-Package>
                     </instructions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>1.0-m5.1</version>
             </plugin>
         </plugins>
         <pluginManagement>
