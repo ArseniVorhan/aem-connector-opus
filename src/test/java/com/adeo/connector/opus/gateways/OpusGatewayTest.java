@@ -4,9 +4,9 @@ import com.adeo.connector.opus.FamilyRequest;
 import com.adeo.connector.opus.FamilyResponse;
 import com.adeo.connector.opus.ProductDetailsRequest;
 import com.adeo.connector.opus.ProductDetailsResponse;
+import com.adeo.connector.opus.gateways.com.adeo.connector.opus.models.ProductModel;
 import com.adeo.connector.opus.gateways.processors.FamilyProcessor;
 import com.adeo.connector.opus.gateways.processors.ModelTypeProcessor;
-import com.adeo.connector.opus.models.ProductModel;
 import com.adobe.connector.services.OrchestratorService;
 import com.adobe.connector.services.impl.GatewayFactoryServiceImpl;
 import com.adobe.connector.services.impl.GatewayResolverImpl;
@@ -67,17 +67,17 @@ public class OpusGatewayTest {
         OrchestratorService orchestratorService = context.getService(OrchestratorService.class);
         orchestratorService.execute(opusRequest, opusResponse);
         Assert.assertEquals("0622-TABLEAU ELECTRIQUE : DISJONCTEUR POUR ...", opusResponse.getModel().getDesignation());
-        Assert.assertEquals("Non", opusResponse.getModel().getResistanceFeu());
+        Assert.assertEquals("дифавтоматы", opusResponse.getModel().getResistanceFeu());
     }
 
     @Test()
     public void testFamily() {
         OpusRequest opusRequest = new FamilyRequest("54664fbe-51a8-4282-a1ed-518993d28b27_Opus_Family");
-        FamilyResponse<ProductModel> opusResponse = new FamilyResponse(ProductModel.class);
+        FamilyResponse<ProductModel[]> opusResponse = new FamilyResponse(ProductModel.class);
         OrchestratorService orchestratorService = context.getService(OrchestratorService.class);
         orchestratorService.execute(opusRequest, opusResponse);
-        Assert.assertEquals("0622-TABLEAU ELECTRIQUE : DISJONCTEUR POUR ...", opusResponse.getModel().getDesignation());
-        Assert.assertEquals("Non", opusResponse.getModel().getResistanceFeu());
+        ProductModel[] models = opusResponse.getModel();
+        Assert.assertEquals(10, models.length);
     }
 
 }

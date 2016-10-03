@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,21 +34,27 @@ public class FamilyProcessor implements Processor {
 
     @Override
     public void process(InputStream inputStream, ConnectorRequest connectorRequest, ConnectorResponse connectorResponse) {
-        OpusResponse response = (OpusResponse) connectorResponse;
 
-        List<Serializable> products = new ArrayList<>();
+        OpusResponse response = (OpusResponse) connectorResponse;
+        Class modelClass = response.getModelClass();
+
+        List products = new ArrayList<>();
 
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(inputStream, "UTF-8");
 
         JSONArray contentItem = JsonPath.read(document, "$.content");
-        contentItem.stream().forEach(o -> parseProduct(connectorRequest, products, o, response.getModelClass()));
+        contentItem.stream().forEach(o -> parseProduct(connectorRequest, products, o, modelClass));
 
-        response.setModel(products.toArray());
+        try {
+            response.setModel(products.toArray((Object[]) Array.newInstance(modelClass, 0)));
+        } catch (Exception e) {
+
+        }
     }
 
-    private void parseProduct(ConnectorRequest connectorRequest, List<Serializable> products, Object newProduct, Class modelClass) {
+    private void parseProduct(ConnectorRequest connectorRequest, List products, Object newProduct, Class modelClass) {
         try {
-            products.add((Serializable) JsonUtils.parseModelType(newProduct, modelClass));
+            products.add(JsonUtils.parseModelType(newProduct, modelClass));
         } catch (Exception e) {
             logger.error("Error while parsing JSON for request '" + connectorRequest.getClass().getName() + "' " + connectorRequest.toString(), e);
         }
