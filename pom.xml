@@ -122,9 +122,6 @@
                             </configuration>
                         </execution>
                     </executions>
-                    <configuration>
-                        <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                    </configuration>
                     <dependencies>
                         <dependency>
                             <groupId>org.slf4j</groupId>
