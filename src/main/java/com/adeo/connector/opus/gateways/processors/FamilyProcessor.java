@@ -48,7 +48,7 @@ public class FamilyProcessor implements Processor {
         try {
             response.setModel(products.toArray((Object[]) Array.newInstance(modelClass, 0)));
         } catch (Exception e) {
-
+            logger.error("Error while parsing JSON for request '" + connectorRequest.getClass().getName() + "' " + connectorRequest.toString(), e);
         }
     }
 

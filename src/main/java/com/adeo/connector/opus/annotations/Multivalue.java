@@ -6,12 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by stievena on 29/09/16.
+ * Created by stievena on 03/10/16.
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Path {
-    String value();
+public @interface Multivalue {
+    String keyField() default "displayName";
 
-    boolean multivalue() default false;
+    String valueField() default "value";
 }

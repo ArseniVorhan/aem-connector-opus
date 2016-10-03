@@ -85,7 +85,7 @@ public class OpusGateway extends RestGateway {
         this.mappings = PropertiesUtil.toStringArray(config.get(MAPPINGS));
     }
 
-    private String buildUrl(String path) {
+    protected String buildUrl(String path) {
         return new StringBuilder().append(this.opusScheme).append("://").append(this.opusDomain).append(this.opusContext).append(path).toString();
     }
 
