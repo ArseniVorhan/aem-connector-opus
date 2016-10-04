@@ -6,13 +6,12 @@ import com.adobe.connector.gateways.http.Processor;
 import com.adobe.connector.gateways.http.RestGateway;
 import com.adobe.connector.gateways.http.Worker;
 import com.adobe.connector.utils.ConnectorUtils;
-import okhttp3.Credentials;
-import okhttp3.Headers;
 import org.apache.felix.scr.annotations.*;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -94,10 +93,12 @@ public class OpusGateway extends RestGateway {
         return name;
     }
 
+
     @Override
-    protected Headers buildHttpHeaders() {
-        String credential = Credentials.basic(this.opusUsername, this.opusPassword);
-        return new Headers.Builder().add("Authorization", credential).build();
+    protected Map<String, String> getHttpHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(this.opusUsername, Base64.getEncoder().encodeToString((this.opusUsername + ":" + this.opusPassword).getBytes()));
+        return headers;
     }
 
     @Override
