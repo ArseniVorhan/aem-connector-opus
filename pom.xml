@@ -84,7 +84,7 @@
                 <configuration>
                     <instructions>
                         <Embed-Dependency>
-                            commons-beanutils,json-path,okhttp,okio,json-smart,asm
+                            commons-beanutils,json-path,json-smart,asm
                         </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Import-Package>
@@ -256,7 +256,7 @@
         <dependency>
             <groupId>com.adobe.connector</groupId>
             <artifactId>connector-core</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 </project>
