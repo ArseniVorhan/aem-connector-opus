@@ -97,7 +97,7 @@ public class OpusGateway extends RestGateway {
     @Override
     protected Map<String, String> getHttpHeaders() {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", Base64.getEncoder().encodeToString((this.opusUsername + ":" + this.opusPassword).getBytes()));
+        headers.put("Authorization", "Basic " + Base64.getEncoder().encodeToString((this.opusUsername + ":" + this.opusPassword).getBytes()));
         return headers;
     }
 

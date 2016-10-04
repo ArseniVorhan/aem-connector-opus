@@ -2,7 +2,7 @@
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Osmorc" name="OSGi">
-      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="aem-connector-opus-1.1.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="com.adeo.connector.adobe.aem-connector-opus" bundleVersion="1.1.0" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="aem-connector-opus-1.2-SNAPSHOT.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="com.adeo.connector.adobe.aem-connector-opus" bundleVersion="1.2.0.SNAPSHOT" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
         <additionalProperties>
           <property key="Bundle-Description" value="API for connecting AEM to third party repositories" />
           <property key="Embed-Dependency" value="commons-beanutils,json-path,json-smart,asm" />
@@ -52,7 +52,7 @@
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.2" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
-    <orderEntry type="library" name="Maven: com.adobe.connector:connector-core:1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.adobe.connector:connector-core:1.2-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.sling:org.apache.sling.testing.osgi-mock:2.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.osgi:osgi.core:6.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.osgi:osgi.cmpn:6.0.0" level="project" />

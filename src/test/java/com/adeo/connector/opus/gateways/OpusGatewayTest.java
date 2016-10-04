@@ -42,8 +42,8 @@ public class OpusGatewayTest {
                 .put(OpusGateway.OPUS_DOMAIN, "opus-core.adobe.demo.web.opus.webadeo.net")
                 .put(OpusGateway.OPUS_CONTEXT, "")
                 .put(OpusGateway.OPUS_SCHEME, "http")
-                .put(OpusGateway.OPUS_USERNAME, "")
-                .put(OpusGateway.OPUS_PASSWORD, "")
+                .put(OpusGateway.OPUS_USERNAME, "wikeo")
+                .put(OpusGateway.OPUS_PASSWORD, "oekiw")
                 .put(OpusGateway.MAPPINGS, new String[]{"com.adeo.connector.opus.ProductDetailsRequest:/business/v2/products/{0}:ModelTypeProcessor", "com.adeo.connector.opus.FamilyRequest:/business/v2/families/{0}/contentSet/contents:FamilyProcessor"})
                 .build());
 
@@ -66,8 +66,8 @@ public class OpusGatewayTest {
         ProductDetailsResponse<ProductModel> opusResponse = new ProductDetailsResponse(ProductModel.class);
         OrchestratorService orchestratorService = context.getService(OrchestratorService.class);
         orchestratorService.execute(opusRequest, opusResponse);
-//        Assert.assertEquals("0622-TABLEAU ELECTRIQUE : DISJONCTEUR POUR ...", opusResponse.getModel().getDesignation());
-//        Assert.assertEquals("дифавтоматы", opusResponse.getModel().getResistanceFeu());
+        Assert.assertEquals("0622-TABLEAU ELECTRIQUE : DISJONCTEUR POUR ...", opusResponse.getModel().getDesignation());
+        Assert.assertEquals("дифавтоматы", opusResponse.getModel().getResistanceFeu());
     }
 
     @Test()
