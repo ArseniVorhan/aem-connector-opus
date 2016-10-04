@@ -1,5 +1,8 @@
 package com.adeo.connector.opus.gateways;
 
+import com.adeo.connector.opus.ProductDetailsRequest;
+import com.adeo.connector.opus.ProductDetailsResponse;
+import com.adeo.connector.opus.gateways.com.adeo.connector.opus.models.ProductModel;
 import com.adeo.connector.opus.gateways.processors.FamilyProcessor;
 import com.adeo.connector.opus.gateways.processors.ModelTypeProcessor;
 import com.adobe.connector.services.OrchestratorService;
@@ -8,6 +11,7 @@ import com.adobe.connector.services.impl.GatewayResolverImpl;
 import com.adobe.connector.services.impl.OrchestratorServiceImpl;
 import com.google.common.collect.ImmutableMap;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -58,10 +62,10 @@ public class OpusGatewayTest {
 
     @Test()
     public void testProduct() {
-//        OpusRequest opusRequest = new ProductDetailsRequest("12868691_refproduct_Product");
-//        ProductDetailsResponse<ProductModel> opusResponse = new ProductDetailsResponse(ProductModel.class);
-//        OrchestratorService orchestratorService = context.getService(OrchestratorService.class);
-//        orchestratorService.execute(opusRequest, opusResponse);
+        OpusRequest opusRequest = new ProductDetailsRequest("12868691_refproduct_Product");
+        ProductDetailsResponse<ProductModel> opusResponse = new ProductDetailsResponse(ProductModel.class);
+        OrchestratorService orchestratorService = context.getService(OrchestratorService.class);
+        orchestratorService.execute(opusRequest, opusResponse);
 //        Assert.assertEquals("0622-TABLEAU ELECTRIQUE : DISJONCTEUR POUR ...", opusResponse.getModel().getDesignation());
 //        Assert.assertEquals("дифавтоматы", opusResponse.getModel().getResistanceFeu());
     }
