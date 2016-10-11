@@ -1,16 +1,24 @@
 package com.adeo.connector.opus.gateways;
 
-import com.adobe.connector.gateways.ConnectorGateway;
-import com.adobe.connector.gateways.ConnectorRequest;
-import com.adobe.connector.gateways.http.Processor;
-import com.adobe.connector.gateways.http.RestGateway;
-import com.adobe.connector.gateways.http.Worker;
+import com.adeo.connector.opus.gateways.processors.Processor;
+import com.adeo.connector.opus.gateways.processors.Worker;
+import com.adobe.connector.ConnectorRequest;
+import com.adobe.connector.ConnectorResponse;
+import com.adobe.connector.gateways.Gateway;
+import com.adobe.connector.gateways.GatewayRequest;
+import com.adobe.connector.gateways.connection.EndpointConnector;
+import com.adobe.connector.gateways.connection.EndpointResponse;
+import com.adobe.connector.gateways.connection.http.HttpEndpointResponse;
+import com.adobe.connector.gateways.connection.http.HttpResponse;
+import com.adobe.connector.gateways.message.Message;
+import com.adobe.connector.gateways.message.RestMessage;
 import com.adobe.connector.utils.ConnectorUtils;
 import org.apache.felix.scr.annotations.*;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,12 +26,15 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Component(immediate = true, label = "Adeo OPUS Connector Gateway", description = "Gateway for communicating with OPUS back end", metatype = true)
-@Service(value = ConnectorGateway.class)
+@Service(value = Gateway.class)
 @References({
         @Reference(name = "processor", referenceInterface = Processor.class, cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)})
-public class OpusGateway extends RestGateway {
+public class OpusGateway extends Gateway {
 
     private final static Logger logger = LoggerFactory.getLogger(OpusGateway.class);
+
+    @Reference
+    private EndpointConnector endpointConnector;
 
     private final Map<String, Processor> processors = new HashMap<>();
 
@@ -93,17 +104,57 @@ public class OpusGateway extends RestGateway {
         return name;
     }
 
-
     @Override
-    protected Map<String, String> getHttpHeaders() {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", "Basic " + Base64.getEncoder().encodeToString((this.opusUsername + ":" + this.opusPassword).getBytes()));
-        return headers;
+    protected EndpointConnector getEndpointConnector() {
+        return endpointConnector;
     }
 
     @Override
-    protected Optional<Worker> getWorker(ConnectorRequest req) {
-        return Stream.of(mappings).map(elem -> elem.split(":")).filter(s -> s.length == 3 && ConnectorUtils.getClassHierarchy(req).contains(s[0])).map(s -> new Worker(buildUrl(s[1]), processors.get(s[2]))).findFirst();
+    protected Message getMessage(GatewayRequest gatewayRequest) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Basic " + Base64.getEncoder().encodeToString((this.opusUsername + ":" + this.opusPassword).getBytes()));
+
+        Optional<Worker> worker = getWorker(gatewayRequest.getConnectorRequest());
+        if (worker.isPresent()) {
+            return new RestMessage(resolveUrl(worker.get(), gatewayRequest.getConnectorRequest()), headers);
+        }
+
+        return null;
+    }
+
+    @Override
+    protected ConnectorResponse makeConnectorResponse(EndpointResponse endpointResponse, GatewayRequest gatewayRequest) {
+        HttpEndpointResponse httpEndpointResponse = (HttpEndpointResponse) endpointResponse;
+        OpusResponse response = null;
+        if (endpointResponse.isSuccessful()) {
+            Optional<Worker> worker = getWorker(gatewayRequest.getConnectorRequest());
+            if (worker.isPresent()) {
+                response = (OpusResponse) worker.get().getProcessor().process(((HttpResponse) endpointResponse.getResponse()).getData(), gatewayRequest.getConnectorRequest(), worker.get().getModelClass());
+            } else {
+                logger.error("No config found for request " + gatewayRequest.getConnectorRequest().getClass().getName());
+                response = OpusResponse.makeNoResponse();
+            }
+        } else {
+            logger.error("Error when requesting OPUS " + httpEndpointResponse.getResponse().toString());
+            response = OpusResponse.makeNoResponse();
+        }
+        response.setMessage(httpEndpointResponse.getResponse().getMessage());
+        response.setStatus(httpEndpointResponse.getResponse().getStatus());
+        return response;
+    }
+
+    private Optional<Worker> getWorker(ConnectorRequest req) {
+        return Stream.of(mappings).map(elem -> elem.split(":")).filter(s -> s.length == 4 && ConnectorUtils.getClassHierarchy(req).contains(s[0])).map(s -> buildWorker(s)).findFirst();
+    }
+
+    private Worker buildWorker(String[] configuration) {
+        return new Worker(buildUrl(configuration[1]), processors.get(configuration[2]), configuration[3]);
+    }
+
+
+    private String resolveUrl(Worker worker, ConnectorRequest req) {
+        MessageFormat messageFormat = new MessageFormat(worker.getUrl());
+        return messageFormat.format(((OpusRequest) req).getParameters());
     }
 
 }

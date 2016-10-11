@@ -1,7 +1,7 @@
 package com.adeo.connector.opus.gateways.processors;
 
 import com.adeo.connector.opus.ProductDetailsRequest;
-import com.adeo.connector.opus.ProductDetailsResponse;
+import com.adeo.connector.opus.gateways.OpusResponse;
 import com.adeo.connector.opus.gateways.com.adeo.connector.opus.models.ProductMask;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Assert;
@@ -12,7 +12,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductMaskTest {
@@ -34,10 +35,9 @@ public class ProductMaskTest {
 
     @Test()
     public void testProductMask() throws Exception {
-        ProductDetailsRequest opusRequest = new ProductDetailsRequest();
-        ProductDetailsResponse<ProductMask> opusResponse = new ProductDetailsResponse(ProductMask.class);
-        processor.process(new FileInputStream("src/test/resources/mask.json"), opusRequest, opusResponse);
-        Assert.assertEquals("the best driller ever", opusResponse.getModel().getHead());
+        ProductDetailsRequest opusRequest = new ProductDetailsRequest(null);
+        OpusResponse<ProductMask> response = processor.process(Files.readAllBytes(Paths.get("src/test/resources/mask.json")), opusRequest, ProductMask.class);
+        Assert.assertEquals("the best driller ever", response.getResults().get(0).getHead());
     }
 
 

@@ -3,17 +3,13 @@ package com.adeo.connector.opus.utils;
 import com.adeo.connector.opus.annotations.Field;
 import com.adeo.connector.opus.annotations.Mask;
 import com.adeo.connector.opus.annotations.Multivalue;
-import com.adeo.connector.opus.models.MultivalueBean;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by stievena on 02/10/16.
@@ -45,12 +41,9 @@ public class JsonUtils {
                 List<Object> jsonObject = JsonPath.read(json, xpath.toString());
                 if (jsonObject.size() > 0) {
                     if (multivalue != null) {
-                        List<MultivalueBean> multivalueBeanList = new ArrayList();
+                        List<AbstractMap.SimpleImmutableEntry> multivalueBeanList = new ArrayList();
                         ((JSONArray) jsonObject.get(0)).forEach(o -> {
-                            MultivalueBean newBean = new MultivalueBean();
-                            newBean.setKey((String) ((Map) o).get(multivalue.keyField()));
-                            newBean.setValue(((JSONArray) ((Map) o).get(multivalue.valueField())).get(0));
-                            multivalueBeanList.add(newBean);
+                            multivalueBeanList.add(new AbstractMap.SimpleImmutableEntry((String) ((Map) o).get(multivalue.keyField()), ((JSONArray) ((Map) o).get(multivalue.valueField())).get(0)));
                         });
                         BeanUtils.copyProperty(objectModel, classField.getName(), multivalueBeanList);
                     } else {

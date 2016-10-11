@@ -1,25 +1,25 @@
 package com.adeo.connector.opus.gateways;
 
-import com.adobe.connector.gateways.http.RestRequest;
+import com.adobe.connector.ConnectorRequest;
 
-import java.util.Arrays;
+import java.util.Map;
 
-public abstract class OpusRequest extends RestRequest {
-    protected String[] arguments;
+public class OpusRequest extends ConnectorRequest {
 
-    @Override
-    protected String[] getParameters() {
-        return this.arguments;
+    protected String[] parameters;
+    protected Map<String, String> headers;
+
+    public OpusRequest(Map<String, String> headers, String... parameters) {
+        this.parameters = parameters;
+        this.headers = headers;
     }
 
-    public OpusRequest(String... arguments) {
-        this.arguments = arguments;
+    public String[] getParameters() {
+        return this.parameters;
     }
 
-    @Override
-    public String toString() {
-        return "OpusRequest{" +
-                "arguments=" + Arrays.toString(arguments) +
-                '}';
+    public Map<String, String> getHeaders() {
+        return this.headers;
     }
+
 }

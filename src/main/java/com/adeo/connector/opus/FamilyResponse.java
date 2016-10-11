@@ -2,15 +2,14 @@ package com.adeo.connector.opus;
 
 import com.adeo.connector.opus.gateways.OpusResponse;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by stievena on 29/09/16.
  */
-public class FamilyResponse<T extends Serializable> extends OpusResponse<T> {
+public class FamilyResponse extends OpusResponse {
 
-    public FamilyResponse(Class<T> modelClass) {
-        super(modelClass);
+    public FamilyResponse(List results) {
+        super(results);
     }
-
 }

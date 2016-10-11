@@ -1,34 +1,49 @@
 package com.adeo.connector.opus.gateways;
 
 
-import com.adobe.connector.gateways.http.RestResponse;
+import com.adobe.connector.ConnectorResponse;
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
  * Opus's Reponse Object.
  *
  * @author kassa
  */
-public abstract class OpusResponse<T extends Serializable> extends RestResponse {
+public class OpusResponse<T> extends ConnectorResponse<T> {
 
-    protected T model;
-    protected Class<T> modelClass;
+    private final static OpusResponse NO_RESPONSE = new OpusResponse(null);
+
+    private int status;
+    private String message;
+    private List<T> results;
+
+    public OpusResponse(List<T> results) {
+        this.results = results;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     @Override
-    public T getModel() {
-        return model;
+    public List<T> getResults() {
+        return results;
     }
 
-    public OpusResponse(Class<T> modelClass) {
-        this.modelClass = modelClass;
-    }
-
-    public Class<T> getModelClass() {
-        return modelClass;
-    }
-
-    public void setModel(T model) {
-        this.model = model;
+    public static OpusResponse makeNoResponse() {
+        return NO_RESPONSE;
     }
 }
