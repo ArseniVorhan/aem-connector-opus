@@ -10,8 +10,8 @@ import com.adobe.connector.gateways.connection.EndpointConnector;
 import com.adobe.connector.gateways.connection.EndpointResponse;
 import com.adobe.connector.gateways.connection.http.HttpEndpointResponse;
 import com.adobe.connector.gateways.connection.http.HttpResponse;
+import com.adobe.connector.gateways.message.HttpMessage;
 import com.adobe.connector.gateways.message.Message;
-import com.adobe.connector.gateways.message.RestMessage;
 import com.adobe.connector.utils.ConnectorUtils;
 import org.apache.felix.scr.annotations.*;
 import org.apache.sling.commons.osgi.PropertiesUtil;
@@ -23,6 +23,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 @Component(immediate = true, label = "Adeo OPUS Connector Gateway", description = "Gateway for communicating with OPUS back end", metatype = true)
@@ -36,7 +37,7 @@ public class OpusGateway extends Gateway {
     @Reference
     private EndpointConnector endpointConnector;
 
-    private final Map<String, Processor> processors = new HashMap<>();
+    private final Map<String, Processor> processors = new ConcurrentHashMap<>();
 
     protected void bindProcessor(final Processor processor, final Map<String, Object> properties) {
         if (processor != null) {
@@ -116,7 +117,9 @@ public class OpusGateway extends Gateway {
 
         Optional<Worker> worker = getWorker(gatewayRequest.getConnectorRequest());
         if (worker.isPresent()) {
-            return new RestMessage(resolveUrl(worker.get(), gatewayRequest.getConnectorRequest()), headers);
+            HttpMessage message = new HttpMessage(resolveUrl(worker.get(), gatewayRequest.getConnectorRequest()));
+            message.setHeaders(headers);
+            return message;
         }
 
         return null;
@@ -125,7 +128,7 @@ public class OpusGateway extends Gateway {
     @Override
     protected ConnectorResponse makeConnectorResponse(EndpointResponse endpointResponse, GatewayRequest gatewayRequest) {
         HttpEndpointResponse httpEndpointResponse = (HttpEndpointResponse) endpointResponse;
-        OpusResponse response = null;
+        OpusResponse response;
         if (endpointResponse.isSuccessful()) {
             Optional<Worker> worker = getWorker(gatewayRequest.getConnectorRequest());
             if (worker.isPresent()) {
