@@ -1,6 +1,6 @@
 package com.adeo.connector.opus;
 
-import com.adeo.connector.opus.gateways.OpusResponse;
+import com.adeo.connector.opus.gateway.OpusResponse;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package com.adeo.connector.opus.gateways.processors;
+package com.adeo.connector.opus.gateway.processors;
 
 
-import com.adeo.connector.opus.gateways.OpusResponse;
+import com.adeo.connector.opus.gateway.OpusResponse;
 import com.adeo.connector.opus.utils.JsonUtils;
 import com.adobe.connector.ConnectorRequest;
 import com.jayway.jsonpath.Configuration;

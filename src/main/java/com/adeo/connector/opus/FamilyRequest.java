@@ -1,6 +1,6 @@
 package com.adeo.connector.opus;
 
-import com.adeo.connector.opus.gateways.OpusRequest;
+import com.adeo.connector.opus.gateway.OpusRequest;
 
 import java.util.Map;
 

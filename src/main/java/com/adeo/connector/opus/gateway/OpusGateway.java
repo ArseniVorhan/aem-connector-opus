@@ -1,7 +1,7 @@
-package com.adeo.connector.opus.gateways;
+package com.adeo.connector.opus.gateway;
 
-import com.adeo.connector.opus.gateways.processors.Processor;
-import com.adeo.connector.opus.gateways.processors.Worker;
+import com.adeo.connector.opus.gateway.processors.Processor;
+import com.adeo.connector.opus.gateway.processors.Worker;
 import com.adobe.connector.ConnectorRequest;
 import com.adobe.connector.ConnectorResponse;
 import com.adobe.connector.gateways.Gateway;

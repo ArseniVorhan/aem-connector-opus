@@ -1,4 +1,4 @@
-package com.adeo.connector.opus.gateways.com.adeo.connector.opus.models;
+package com.adeo.connector.opus.gateway.com.adeo.connector.opus.models;
 
 import com.adeo.connector.opus.annotations.Field;
 

@@ -1,4 +1,4 @@
-package com.adeo.connector.opus.gateways;
+package com.adeo.connector.opus.gateway;
 
 import com.adobe.connector.ConnectorRequest;
 

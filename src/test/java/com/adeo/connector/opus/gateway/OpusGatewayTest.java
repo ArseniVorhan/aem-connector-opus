@@ -1,10 +1,10 @@
-package com.adeo.connector.opus.gateways;
+package com.adeo.connector.opus.gateway;
 
 import com.adeo.connector.opus.FamilyRequest;
 import com.adeo.connector.opus.ProductDetailsRequest;
-import com.adeo.connector.opus.gateways.com.adeo.connector.opus.models.ProductModel;
-import com.adeo.connector.opus.gateways.processors.ContentSetProcessor;
-import com.adeo.connector.opus.gateways.processors.ModelTypeProcessor;
+import com.adeo.connector.opus.gateway.com.adeo.connector.opus.models.ProductModel;
+import com.adeo.connector.opus.gateway.processors.ContentSetProcessor;
+import com.adeo.connector.opus.gateway.processors.ModelTypeProcessor;
 import com.adobe.connector.gateways.connection.http.HttpEndpointConnector;
 import com.adobe.connector.gateways.connection.http.OkHttpEndpointClient;
 import com.adobe.connector.services.OrchestratorService;
@@ -53,7 +53,7 @@ public class OpusGatewayTest {
                 .put(OpusGateway.OPUS_SCHEME, "http")
                 .put(OpusGateway.OPUS_USERNAME, "wikeo")
                 .put(OpusGateway.OPUS_PASSWORD, "oekiw")
-                .put(OpusGateway.MAPPINGS, new String[]{"com.adeo.connector.opus.ProductDetailsRequest:/business/v2/products/{0}:ModelTypeProcessor:com.adeo.connector.opus.gateways.com.adeo.connector.opus.models.ProductModel", "com.adeo.connector.opus.FamilyRequest:/business/v2/families/{0}/contentSet/contents:ContentSetProcessor:com.adeo.connector.opus.gateways.com.adeo.connector.opus.models.ProductModel"})
+                .put(OpusGateway.MAPPINGS, new String[]{"com.adeo.connector.opus.ProductDetailsRequest:/business/v2/products/{0}:ModelTypeProcessor:com.adeo.connector.opus.gateway.com.adeo.connector.opus.models.ProductModel", "com.adeo.connector.opus.FamilyRequest:/business/v2/families/{0}/contentSet/contents:ContentSetProcessor:com.adeo.connector.opus.gateway.com.adeo.connector.opus.models.ProductModel"})
                 .build());
 
         context.registerInjectActivateService(new ModelTypeProcessor());
@@ -61,7 +61,7 @@ public class OpusGatewayTest {
 
         context.registerInjectActivateService(new ExecutionPlanFactoryImpl(), ImmutableMap.<String, Object>builder()
                 .put("gateway.name", "opusGateway")
-                .put("request", "com.adeo.connector.opus.gateways.OpusRequest")
+                .put("request", "com.adeo.connector.opus.gateway.OpusRequest")
                 .build());
 
         context.registerInjectActivateService(orchestratorService);

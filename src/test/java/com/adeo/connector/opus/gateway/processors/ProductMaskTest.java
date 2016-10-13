@@ -1,8 +1,8 @@
-package com.adeo.connector.opus.gateways.processors;
+package com.adeo.connector.opus.gateway.processors;
 
 import com.adeo.connector.opus.ProductDetailsRequest;
-import com.adeo.connector.opus.gateways.OpusResponse;
-import com.adeo.connector.opus.gateways.com.adeo.connector.opus.models.ProductMask;
+import com.adeo.connector.opus.gateway.OpusResponse;
+import com.adeo.connector.opus.gateway.com.adeo.connector.opus.models.ProductMask;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Assert;
 import org.junit.Before;
