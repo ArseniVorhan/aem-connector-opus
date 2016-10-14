@@ -1,7 +1,7 @@
 package com.adeo.connector.opus.gateway.processors;
 
+import com.adeo.connector.opus.gateway.OpusResponse;
 import com.adobe.connector.ConnectorRequest;
-import com.adobe.connector.ConnectorResponse;
 
 /**
  * Created by stievena on 29/09/16.
@@ -9,5 +9,5 @@ import com.adobe.connector.ConnectorResponse;
 public interface Processor {
     String getName();
 
-    ConnectorResponse process(byte[] data, ConnectorRequest request, Class modelClass);
+    <T> OpusResponse<T> process(byte[] data, ConnectorRequest request, Class<T> modelClass);
 }

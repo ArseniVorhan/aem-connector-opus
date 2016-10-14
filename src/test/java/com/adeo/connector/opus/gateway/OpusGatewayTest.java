@@ -11,7 +11,6 @@ import com.adobe.connector.services.OrchestratorService;
 import com.adobe.connector.services.impl.DefaultExecutionPlanBuilder;
 import com.adobe.connector.services.impl.DefaultOrchestratorService;
 import com.adobe.connector.services.impl.ExecutionPlanFactoryImpl;
-import com.adobe.connector.services.impl.GatewayResolverImpl;
 import com.google.common.collect.ImmutableMap;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Assert;
@@ -39,8 +38,6 @@ public class OpusGatewayTest {
 
     @Before
     public void setUp() throws Exception {
-
-        context.registerInjectActivateService(new GatewayResolverImpl());
 
         context.registerInjectActivateService(new OkHttpEndpointClient());
         context.registerInjectActivateService(new HttpEndpointConnector());

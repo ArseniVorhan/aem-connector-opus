@@ -21,9 +21,9 @@ import java.util.List;
  */
 @Component(immediate = true)
 @Service(value = Processor.class)
-public class ContentSetProcessor implements Processor {
+public class SegmentationProcessor implements Processor {
 
-    private final static Logger logger = LoggerFactory.getLogger(ContentSetProcessor.class);
+    private final static Logger logger = LoggerFactory.getLogger(SegmentationProcessor.class);
 
     @Override
     public String getName() {
@@ -37,7 +37,7 @@ public class ContentSetProcessor implements Processor {
 
             Object document = Configuration.defaultConfiguration().jsonProvider().parse(new ByteArrayInputStream(data), "UTF-8");
 
-            JSONArray contentItem = JsonPath.read(document, "$.content");
+            JSONArray contentItem = JsonPath.read(document, "$.segmentationCriteria");
             contentItem.stream().forEach(o -> parseObject(connectorRequest, objectList, o, modelClass));
 
             return new OpusResponse(objectList);
