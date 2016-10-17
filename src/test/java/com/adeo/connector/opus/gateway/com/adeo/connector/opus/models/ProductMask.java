@@ -1,11 +1,11 @@
-package com.adeo.connector.opus.gateways.com.adeo.connector.opus.models;
+package com.adeo.connector.opus.gateway.com.adeo.connector.opus.models;
 
 import com.adeo.connector.opus.annotations.Field;
 import com.adeo.connector.opus.annotations.Mask;
 import com.adeo.connector.opus.annotations.Multivalue;
-import com.adeo.connector.opus.models.MultivalueBean;
 
 import java.io.Serializable;
+import java.util.AbstractMap;
 import java.util.List;
 
 /**
@@ -16,17 +16,17 @@ public class ProductMask implements Serializable {
     @Mask
     @Field("caracs")
     @Multivalue(keyField = "href")
-    private List<MultivalueBean> caracs;
+    private List<AbstractMap.SimpleImmutableEntry> caracs;
 
     @Mask
     @Field("head")
     private String head;
 
-    public List<MultivalueBean> getCaracs() {
+    public List<AbstractMap.SimpleImmutableEntry> getCaracs() {
         return caracs;
     }
 
-    public void setCaracs(List<MultivalueBean> caracs) {
+    public void setCaracs(List<AbstractMap.SimpleImmutableEntry> caracs) {
         this.caracs = caracs;
     }
 
