@@ -8,7 +8,7 @@ import com.adeo.connector.opus.gateway.OpusRequest;
 public class ProductDetailsRequest extends OpusRequest {
 
     public ProductDetailsRequest(String... arguments) {
-        super(null, arguments);
+        super(arguments);
     }
 
 

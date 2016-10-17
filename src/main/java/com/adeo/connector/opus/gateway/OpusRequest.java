@@ -1,25 +1,9 @@
 package com.adeo.connector.opus.gateway;
 
-import com.adobe.connector.ConnectorRequest;
+import com.adobe.connector.RestRequest;
 
-import java.util.Map;
-
-public class OpusRequest extends ConnectorRequest {
-
-    protected String[] parameters;
-    protected Map<String, String> headers;
-
-    public OpusRequest(Map<String, String> headers, String... parameters) {
-        this.parameters = parameters;
-        this.headers = headers;
+public class OpusRequest extends RestRequest {
+    public OpusRequest(String... parameters) {
+        super(parameters);
     }
-
-    public String[] getParameters() {
-        return this.parameters;
-    }
-
-    public Map<String, String> getHeaders() {
-        return this.headers;
-    }
-
 }

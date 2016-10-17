@@ -8,6 +8,6 @@ import com.adeo.connector.opus.gateway.OpusRequest;
 public class FamilyRequest extends OpusRequest {
 
     public FamilyRequest(String... arguments) {
-        super(null, arguments);
+        super(arguments);
     }
 }
