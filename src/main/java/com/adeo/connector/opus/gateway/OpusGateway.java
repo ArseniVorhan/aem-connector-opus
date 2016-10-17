@@ -4,14 +4,15 @@ import com.adeo.connector.opus.gateway.processors.Processor;
 import com.adeo.connector.opus.gateway.processors.Worker;
 import com.adobe.connector.ConnectorRequest;
 import com.adobe.connector.ConnectorResponse;
-import com.adobe.connector.gateways.Gateway;
-import com.adobe.connector.gateways.GatewayRequest;
-import com.adobe.connector.gateways.connection.EndpointConnector;
-import com.adobe.connector.gateways.connection.EndpointResponse;
-import com.adobe.connector.gateways.connection.http.HttpEndpointResponse;
-import com.adobe.connector.gateways.connection.http.HttpResponse;
-import com.adobe.connector.gateways.message.HttpMessage;
-import com.adobe.connector.gateways.message.Message;
+import com.adobe.connector.RestResponse;
+import com.adobe.connector.gateway.Gateway;
+import com.adobe.connector.gateway.GatewayRequest;
+import com.adobe.connector.gateway.connection.EndpointConnector;
+import com.adobe.connector.gateway.connection.EndpointResponse;
+import com.adobe.connector.gateway.connection.http.HttpEndpointResponse;
+import com.adobe.connector.gateway.connection.http.HttpResponse;
+import com.adobe.connector.gateway.message.HttpMessage;
+import com.adobe.connector.gateway.message.Message;
 import com.adobe.connector.utils.ConnectorUtils;
 import org.apache.felix.scr.annotations.*;
 import org.apache.sling.commons.osgi.PropertiesUtil;
@@ -19,10 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -127,23 +125,19 @@ public class OpusGateway extends Gateway {
 
     @Override
     protected ConnectorResponse makeConnectorResponse(EndpointResponse endpointResponse, GatewayRequest gatewayRequest) {
-        HttpEndpointResponse httpEndpointResponse = (HttpEndpointResponse) endpointResponse;
-        OpusResponse response;
+        HttpResponse httpResponse = ((HttpEndpointResponse) endpointResponse).getResponse();
+        List ProcessResponseList = null;
         if (endpointResponse.isSuccessful()) {
             Optional<Worker> worker = getWorker(gatewayRequest.getConnectorRequest());
             if (worker.isPresent()) {
-                response = (OpusResponse) worker.get().getProcessor().process(((HttpResponse) endpointResponse.getResponse()).getData(), gatewayRequest.getConnectorRequest(), worker.get().getModelClass());
+                ProcessResponseList = worker.get().getProcessor().process(httpResponse.getData(), gatewayRequest.getConnectorRequest(), worker.get().getModelClass());
             } else {
                 logger.error("No config found for request " + gatewayRequest.getConnectorRequest().getClass().getName());
-                response = OpusResponse.makeNoResponse();
             }
         } else {
-            logger.error("Error when requesting OPUS " + httpEndpointResponse.getResponse().toString());
-            response = OpusResponse.makeNoResponse();
+            logger.error("Error when requesting OPUS " + httpResponse.toString());
         }
-        response.setMessage(httpEndpointResponse.getResponse().getMessage());
-        response.setStatus(httpEndpointResponse.getResponse().getStatus());
-        return response;
+        return new RestResponse(ProcessResponseList, httpResponse.getStatus(), httpResponse.getMessage());
     }
 
     private Optional<Worker> getWorker(ConnectorRequest req) {

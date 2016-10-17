@@ -1,7 +1,6 @@
 package com.adeo.connector.opus.gateway.processors;
 
 
-import com.adeo.connector.opus.gateway.OpusResponse;
 import com.adeo.connector.opus.utils.JsonUtils;
 import com.adobe.connector.ConnectorRequest;
 import com.jayway.jsonpath.Configuration;
@@ -31,7 +30,7 @@ public class SegmentationProcessor implements Processor {
     }
 
     @Override
-    public OpusResponse process(byte[] data, ConnectorRequest connectorRequest, Class modelClass) {
+    public List process(byte[] data, ConnectorRequest connectorRequest, Class modelClass) {
         try {
             List objectList = new ArrayList<>();
 
@@ -40,7 +39,7 @@ public class SegmentationProcessor implements Processor {
             JSONArray contentItem = JsonPath.read(document, "$.segmentationCriteria");
             contentItem.stream().forEach(o -> parseObject(connectorRequest, objectList, o, modelClass));
 
-            return new OpusResponse(objectList);
+            return objectList;
         } catch (Exception e) {
             logger.error("Error while parsing JSON for request '" + connectorRequest.getClass().getName() + "' " + connectorRequest.toString(), e);
         }

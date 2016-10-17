@@ -1,7 +1,6 @@
 package com.adeo.connector.opus.gateway.processors;
 
 
-import com.adeo.connector.opus.gateway.OpusResponse;
 import com.adeo.connector.opus.utils.JsonUtils;
 import com.adobe.connector.ConnectorRequest;
 import com.jayway.jsonpath.Configuration;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by stievena on 29/09/16.
@@ -28,10 +28,10 @@ public class ModelTypeProcessor implements Processor {
     }
 
     @Override
-    public OpusResponse process(byte[] data, ConnectorRequest connectorRequest, Class modelClass) {
+    public List process(byte[] data, ConnectorRequest connectorRequest, Class modelClass) {
         Object document = Configuration.defaultConfiguration().jsonProvider().parse(new ByteArrayInputStream(data), "UTF-8");
         try {
-            return new OpusResponse(Collections.singletonList(JsonUtils.parseModelType(document, modelClass)));
+            return Collections.singletonList(JsonUtils.parseModelType(document, modelClass));
         } catch (Exception e) {
             logger.error("Error while parsing JSON for request '" + connectorRequest.getClass().getName() + "' " + connectorRequest.toString(), e);
         }
