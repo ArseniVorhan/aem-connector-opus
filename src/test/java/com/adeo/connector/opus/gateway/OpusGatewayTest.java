@@ -5,7 +5,6 @@ import com.adeo.connector.opus.ProductDetailsRequest;
 import com.adeo.connector.opus.gateway.com.adeo.connector.opus.models.ProductModel;
 import com.adeo.connector.opus.gateway.processors.ContentSetProcessor;
 import com.adeo.connector.opus.gateway.processors.ModelTypeProcessor;
-import com.adobe.connector.RestResponse;
 import com.adobe.connector.gateway.connection.http.HttpEndpointConnector;
 import com.adobe.connector.gateway.connection.http.OkHttpEndpointClient;
 import com.adobe.connector.services.OrchestratorService;
@@ -71,7 +70,7 @@ public class OpusGatewayTest {
     public void testProduct() {
         OpusRequest opusRequest = new ProductDetailsRequest("12868691_refproduct_Product");
         OrchestratorService orchestratorService = context.getService(OrchestratorService.class);
-        RestResponse<ProductModel> response = (RestResponse) orchestratorService.execute(opusRequest);
+        OpusResponse<ProductModel> response = (OpusResponse) orchestratorService.execute(opusRequest);
         Assert.assertEquals("0622-TABLEAU ELECTRIQUE : DISJONCTEUR POUR ...", response.getResults().get(0).getDesignation());
         Assert.assertEquals("дифавтоматы", response.getResults().get(0).getResistanceFeu());
     }
@@ -80,7 +79,7 @@ public class OpusGatewayTest {
     public void testFamily() {
         OpusRequest opusRequest = new FamilyRequest("d9446ea6-86fe-421e-ad4f-102fcb0365c3_Opus_Family");
         OrchestratorService orchestratorService = context.getService(OrchestratorService.class);
-        RestResponse<ProductModel> response = (RestResponse) orchestratorService.execute(opusRequest);
+        OpusResponse<ProductModel> response = (OpusResponse) orchestratorService.execute(opusRequest);
         List<ProductModel> models = response.getResults();
         Assert.assertEquals(10, models.size());
     }
