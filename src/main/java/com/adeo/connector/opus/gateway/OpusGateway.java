@@ -4,7 +4,6 @@ import com.adeo.connector.opus.gateway.processors.Processor;
 import com.adeo.connector.opus.gateway.processors.Worker;
 import com.adobe.connector.ConnectorRequest;
 import com.adobe.connector.ConnectorResponse;
-import com.adobe.connector.RestResponse;
 import com.adobe.connector.gateway.Gateway;
 import com.adobe.connector.gateway.GatewayRequest;
 import com.adobe.connector.gateway.connection.EndpointConnector;
@@ -137,7 +136,7 @@ public class OpusGateway extends Gateway {
         } else {
             logger.error("Error when requesting OPUS " + httpResponse.toString());
         }
-        return new RestResponse(ProcessResponseList, httpResponse.getStatus(), httpResponse.getMessage());
+        return new OpusResponse(ProcessResponseList, httpResponse.getStatus(), httpResponse.getMessage());
     }
 
     private Optional<Worker> getWorker(ConnectorRequest req) {
