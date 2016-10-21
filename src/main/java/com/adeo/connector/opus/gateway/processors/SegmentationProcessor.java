@@ -26,7 +26,7 @@ public class SegmentationProcessor implements Processor {
 
     @Override
     public String getName() {
-        return "ContentSetProcessor";
+        return "SegmentationProcessor";
     }
 
     @Override
