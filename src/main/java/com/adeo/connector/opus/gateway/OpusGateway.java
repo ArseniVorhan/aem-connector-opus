@@ -15,6 +15,9 @@ import com.adobe.connector.gateway.message.Message;
 import com.adobe.connector.utils.ConnectorUtils;
 import org.apache.felix.scr.annotations.*;
 import org.apache.sling.commons.osgi.PropertiesUtil;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,9 +84,10 @@ public class OpusGateway extends Gateway {
     private String name;
     private String[] mappings;
     private Map<String, Worker> workers = new HashMap<>();
+    private BundleContext bundleContext;
 
     @Activate
-    protected void activate(final Map<String, Object> config) {
+    protected void activate(final Map<String, Object> config, final ComponentContext componentContext) {
         this.opusScheme = PropertiesUtil.toString(config.get(OPUS_SCHEME), "");
         this.opusDomain = PropertiesUtil.toString(config.get(OPUS_DOMAIN), "");
         this.opusContext = PropertiesUtil.toString(config.get(OPUS_CONTEXT), "");
@@ -91,6 +95,7 @@ public class OpusGateway extends Gateway {
         this.opusUsername = PropertiesUtil.toString(config.get(OPUS_USERNAME), "");
         this.opusPassword = PropertiesUtil.toString(config.get(OPUS_PASSWORD), "");
         this.mappings = PropertiesUtil.toStringArray(config.get(MAPPINGS));
+        bundleContext = componentContext.getBundleContext();
     }
 
     protected String buildUrl(String path) {
@@ -140,11 +145,12 @@ public class OpusGateway extends Gateway {
     }
 
     private Optional<Worker> getWorker(ConnectorRequest req) {
-        return Stream.of(mappings).map(elem -> elem.split(":")).filter(s -> s.length == 4 && ConnectorUtils.getClassHierarchy(req).contains(s[0])).map(s -> buildWorker(s)).findFirst();
+        return Stream.of(mappings).map(elem -> elem.split("@")).filter(s -> s.length == 4 && ConnectorUtils.getClassHierarchy(req).contains(s[0])).map(s -> buildWorker(s)).findFirst();
     }
 
     private Worker buildWorker(String[] configuration) {
-        return new Worker(buildUrl(configuration[1]), processors.get(configuration[2]), configuration[3]);
+        Class modelClass = findClass(configuration[3]);
+        return new Worker(buildUrl(configuration[1]), processors.get(configuration[2]), modelClass);
     }
 
 
@@ -153,4 +159,15 @@ public class OpusGateway extends Gateway {
         return messageFormat.format(((OpusRequest) req).getParameters());
     }
 
+    private Class findClass(String name) {
+        for (Bundle b : bundleContext.getBundles()) {
+            try {
+                Class c = b.loadClass(name);
+                return c;
+            } catch (ClassNotFoundException e) {
+                // this bundle doesn't have the class
+            }
+        }
+        return null;
+    }
 }

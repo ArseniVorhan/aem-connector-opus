@@ -9,14 +9,10 @@ public class Worker {
     private Processor processor;
     private Class modelClass;
 
-    public Worker(String url, Processor processor, String modelClass) {
+    public Worker(String url, Processor processor, Class modelClass) {
         this.url = url;
         this.processor = processor;
-        try {
-            this.modelClass = Class.forName(modelClass);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.modelClass = modelClass;
     }
 
     public String getUrl() {
